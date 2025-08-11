@@ -1,4 +1,4 @@
-package com.alelo.desafio_votacao;
+package com.alelo.desafio.votacao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

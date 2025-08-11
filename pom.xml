@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.alelo</groupId>
-	<artifactId>desafio-votacao</artifactId>
+	<artifactId>desafio.votacao</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>desafio-votacao</name>
 	<description>Desafio votacao Alelo</description>

@@ -1,4 +1,4 @@
-package com.alelo.desafio_votacao;
+package com.alelo.desafio.votacao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
