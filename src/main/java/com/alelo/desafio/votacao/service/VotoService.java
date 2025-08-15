@@ -22,7 +22,7 @@ public class VotoService {
     }
 
     @Transactional
-    public Voto votar(Long pautaId, String associadoId, String cpf, Boolean votoSim) {
+    public Voto votar(String pautaId, String associadoId, String cpf, Boolean votoSim) {
         // valida sessão
         SessaoVotacao sessao = sessaoService.findByPautaId(pautaId);
         if (sessao == null || !sessao.isAtivaNow()) {
@@ -51,7 +51,7 @@ public class VotoService {
         return repo.save(voto);
     }
 
-    public ResultadoDTO resultado(Long pautaId) {
+    public ResultadoDTO resultado(String pautaId) {
         long sim = repo.countByPautaIdAndVotoSimTrue(pautaId);
         long nao = repo.countByPautaIdAndVotoSimFalse(pautaId);
         String res;

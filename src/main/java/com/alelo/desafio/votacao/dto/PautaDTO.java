@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class PautaDTO {
-    private Long id;
+    private String id;
     private String titulo;
     private String descricao;
 }

@@ -45,20 +45,20 @@ public class PautaController {
     }
 
     @PostMapping("/{id}/abrir-sessao")
-    public ResponseEntity<String> abrirSessao(@PathVariable Long id, @RequestBody(required = false) AbrirSessaoDTO dto) {
+    public ResponseEntity<String> abrirSessao(@PathVariable String id, @RequestBody(required = false) AbrirSessaoDTO dto) {
         Long dur = dto == null ? null : dto.getDuracaoSegundos();
         SessaoVotacao s = sessaoService.abrirSessao(id, dur);
         return ResponseEntity.ok("Sessão aberta até: " + s.getFim());
     }
 
     @PostMapping("/{id}/votos")
-    public ResponseEntity<String> votar(@PathVariable Long id, @RequestBody VotoDTO dto) {
+    public ResponseEntity<String> votar(@PathVariable String id, @RequestBody VotoDTO dto) {
         Voto v = votoService.votar(id, dto.getAssociadoId(), dto.getCpf(), dto.getVotoSim());
         return ResponseEntity.ok("Voto registrado id=" + v.getId());
     }
 
     @GetMapping("/{id}/resultado")
-    public ResultadoDTO resultado(@PathVariable Long id) {
+    public ResultadoDTO resultado(@PathVariable String id) {
         return votoService.resultado(id);
     }
 }

@@ -14,7 +14,7 @@ public class SessaoService {
     public SessaoService(SessaoRepository repo) { this.repo = repo; }
 
     @Transactional
-    public SessaoVotacao abrirSessao(Long pautaId, Long duracaoSegundos) {
+    public SessaoVotacao abrirSessao(String pautaId, Long duracaoSegundos) {
         if (duracaoSegundos == null || duracaoSegundos <= 0) duracaoSegundos = 60L;
         // se já existe sessão para pauta, reabre/atualiza
         SessaoVotacao s = repo.findByPautaId(pautaId);
@@ -33,7 +33,7 @@ public class SessaoService {
         return repo.save(s);
     }
 
-    public SessaoVotacao findByPautaId(Long pautaId) { return repo.findByPautaId(pautaId); }
+    public SessaoVotacao findByPautaId(String pautaId) { return repo.findByPautaId(pautaId); }
 
     @Scheduled(fixedRate = 10_000)
     public void fecharSessoesExpiradas() {

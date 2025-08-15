@@ -1,10 +1,11 @@
 package com.alelo.desafio.votacao.repository;
 
 import com.alelo.desafio.votacao.entity.SessaoVotacao;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import java.util.List;
 
-public interface SessaoRepository extends JpaRepository<SessaoVotacao, Long> {
+public interface SessaoRepository extends MongoRepository<SessaoVotacao, String> {
     List<SessaoVotacao> findByAbertaTrue();
-    SessaoVotacao findByPautaId(Long pautaId);
+    SessaoVotacao findByPautaId(String pautaId);
 }

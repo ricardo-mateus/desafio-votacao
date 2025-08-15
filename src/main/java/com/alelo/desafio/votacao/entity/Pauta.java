@@ -1,14 +1,18 @@
 package com.alelo.desafio.votacao.entity;
 
 import lombok.*;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "pauta")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Document(collection = "pautas")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Pauta {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    private String id;
     private String titulo;
     private String descricao;
 }

@@ -1,7 +1,7 @@
 package com.alelo.desafio.votacao.repository;
 
 import com.alelo.desafio.votacao.entity.Pauta;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface PautaRepository extends JpaRepository<Pauta, Long> { }
+public interface PautaRepository extends MongoRepository<Pauta, String> { }
 

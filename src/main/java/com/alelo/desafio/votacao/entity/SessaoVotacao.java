@@ -1,18 +1,22 @@
 package com.alelo.desafio.votacao.entity;
 
 import lombok.*;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.*;
 
-@Entity
-@Table(name = "sessao_votacao")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Document(collection = "sessoes")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SessaoVotacao {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    private String id;
 
-    @Column(name = "pauta_id", nullable = false)
-    private Long pautaId;
+    private String pautaId;
 
     private LocalDateTime inicio;
     private Long duracaoSegundos;

@@ -1,19 +1,23 @@
 package com.alelo.desafio.votacao.entity;
 
 import lombok.*;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "voto",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"pauta_id", "associado_id"})})
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Document(collection = "votos")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@CompoundIndex(name = "pauta_associado_idx", def = "{'pautaId' : 1, 'associadoId': 1}", unique = true)
 public class Voto {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "pauta_id", nullable = false)
-    private Long pautaId;
-    @Column(name = "associado_id", nullable = false)
+    @Id
+    private String id;
+    private String pautaId;
     private String associadoId;
     private String cpf;
     private Boolean votoSim;

@@ -13,5 +13,5 @@ public class PautaService {
 
     public Pauta create(Pauta p) { return repo.save(p); }
     public List<Pauta> list() { return repo.findAll(); }
-    public Pauta find(Long id) { return repo.findById(id).orElse(null); }
+    public Pauta find(String id) { return repo.findById(id).orElse(null); }
 }
