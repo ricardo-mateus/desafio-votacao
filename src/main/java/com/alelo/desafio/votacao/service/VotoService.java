@@ -1,5 +1,6 @@
 package com.alelo.desafio.votacao.service;
 
+import com.alelo.desafio.votacao.dto.ResultadoAgregadoDTO;
 import com.alelo.desafio.votacao.dto.ResultadoDTO;
 import com.alelo.desafio.votacao.entity.SessaoVotacao;
 import com.alelo.desafio.votacao.entity.Voto;
@@ -52,12 +53,17 @@ public class VotoService {
     }
 
     public ResultadoDTO resultado(String pautaId) {
-        long sim = repo.countByPautaIdAndVotoSimTrue(pautaId);
-        long nao = repo.countByPautaIdAndVotoSimFalse(pautaId);
-        String res;
-        if (sim > nao) res = "APROVADO";
-        else if (nao > sim) res = "REPROVADO";
-        else res = "EMPATE";
-        return new ResultadoDTO(pautaId, sim, nao, res);
+        ResultadoAgregadoDTO resultadoAgregado = repo.contarVotosPorPauta(pautaId);
+
+        if (resultadoAgregado == null) {
+            return new ResultadoDTO(pautaId, 0L, 0L, "EMPATE");
+        }
+
+        return new ResultadoDTO(
+                resultadoAgregado.getPautaId(),
+                resultadoAgregado.getTotalSim(),
+                resultadoAgregado.getTotalNao(),
+                resultadoAgregado.getTotalSim() > resultadoAgregado.getTotalNao() ? "APROVADO" : "REPROVADO"
+        );
     }
 }
