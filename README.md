@@ -74,3 +74,5 @@ A aplicação foi projetada para lidar com cenários de alta carga, como centena
 # Versionamento da API
 A API usa URL Path Versioning (/api/v1/...), uma abordagem simples e amplamente adotada que facilita a manutenção de versões sem impactar clientes existentes (URL Path Versioning).
 
+# Nota
+Foi pensado na solução de um cofre de senha para a senha do banco mongodb não ficar exposta, porém, não foi encontrada uma solução gratuita e sem precisar configuração local. Por isso, a credencial do banco segue exposta no application.properties 
