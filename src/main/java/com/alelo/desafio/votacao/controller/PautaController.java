@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.java.Log;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/pautas")
 @Tag(name = "Votação", description = "Endpoints para gerenciar votações em assembléia")
-@Log
 public class PautaController {
     private final PautaService pautaService;
     private final SessaoService sessaoService;
@@ -46,7 +44,6 @@ public class PautaController {
         Pauta p = Pauta.builder().titulo(dto.getTitulo()).descricao(dto.getDescricao()).build();
         Pauta criado = pautaService.create(p);
         PautaDTO out = new PautaDTO(criado.getId(), criado.getTitulo(), criado.getDescricao());
-        log.info("....# Pauta criada com sucesso #....");
         return ResponseEntity.created(URI.create("/api/v1/pautas/" + criado.getId())).body(out);
     }
 
@@ -57,7 +54,6 @@ public class PautaController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public List<PautaDTO> listar() {
-        log.info("....# Lista de pautas #....");
         return pautaService.list().stream()
                 .map(p -> new PautaDTO(p.getId(), p.getTitulo(), p.getDescricao()))
                 .collect(Collectors.toList());
@@ -72,7 +68,6 @@ public class PautaController {
     public ResponseEntity<String> abrirSessao(@PathVariable String id, @RequestBody(required = false) AbrirSessaoDTO dto) {
         Long dur = dto == null ? null : dto.getDuracaoSegundos();
         SessaoVotacao s = sessaoService.abrirSessao(id, dur);
-        log.info("....# Sessção aberta id: " + s.getId() + " #....");
         return ResponseEntity.ok("Sessão aberta até: " + s.getFim());
     }
 
@@ -84,7 +79,6 @@ public class PautaController {
     })
     public ResponseEntity<String> votar(@PathVariable String id, @RequestBody VotoDTO dto) {
         Voto v = votoService.votar(id, dto.getAssociadoId(), dto.getCpf(), dto.getVotoSim());
-        log.info("....# Voto realizado id: " + v.getId() + " #....");
         return ResponseEntity.ok("Voto registrado id=" + v.getId());
     }
 
@@ -95,7 +89,6 @@ public class PautaController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public ResultadoDTO resultado(@PathVariable String id) {
-        log.info("....# Lista de resultados #....");
         return votoService.resultado(id);
     }
 }

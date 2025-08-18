@@ -60,6 +60,17 @@ O projeto segue uma arquitetura em camadas:
 - **DTO**: Objetos para transferência de dados entre camadas, protegendo as entidades de domínio.
 - **Exception**: Centraliza o tratamento de erros com @ControllerAdvice para respostas consistentes.
 
+## 🚀 Performance e Escalabilidade
+A aplicação foi projetada para lidar com cenários de alta carga, como centenas de milhares de votos, garantindo desempenho e escalabilidade. As estratégias abaixo foram implementadas:
+
+- **Agregação no Banco de Dados**:
+  - O endpoint `GET /api/v1/pautas/{id}/resultado` utiliza o **Aggregation Framework** do MongoDB para contabilizar votos ("Sim" e "Não") diretamente no banco.
+  - Apenas o resultado consolidado é retornado, reduzindo o consumo de memória e o tráfego de rede entre a aplicação e o MongoDB Atlas.
+
+- **Cache de Resultados**:
+  - Resultados de pautas com sessões encerradas são imutáveis e armazenados em cache com o mecanismo do Spring (`@Cacheable`).
+  - Na primeira requisição, o resultado é calculado e armazenado. Requisições subsequentes são atendidas diretamente pelo cache, eliminando consultas ao banco de dados.
+
 # Versionamento da API
 A API usa URL Path Versioning (/api/v1/...), uma abordagem simples e amplamente adotada que facilita a manutenção de versões sem impactar clientes existentes (URL Path Versioning).
 
