@@ -1,117 +1,65 @@
-# Votação
+# Desafio Votação
+## 📖 Sobre o Projeto
+Esta é uma API REST desenvolvida em Java com Spring Boot para gerenciar sessões de votação em assembleias de cooperativas. A solução permite o cadastro de pautas, abertura de sessões de votação com duração customizável, registro de votos por associados (com validação de CPF opcional) e apuração de resultados. O projeto foi desenvolvido como parte de um desafio técnico, com foco em boas práticas, arquitetura limpa e manutenibilidade.
 
-## Objetivo
+# ✨ Funcionalidades Principais
 
-No cooperativismo, cada associado possui um voto e as decisões são tomadas em assembleias, por votação. Imagine que você deve criar uma solução para dispositivos móveis para gerenciar e participar dessas sessões de votação.
-Essa solução deve ser executada na nuvem e promover as seguintes funcionalidades através de uma API REST:
+- Gestão de Pautas: Cadastrar e listar pautas para votação.
+- Sessões de Votação: Abrir sessões para pautas específicas, com duração configurável (padrão: 1 minuto).
+- Registro de Votos: Permitir que associados votem ("Sim" ou "Não") em uma pauta com sessão aberta, com votação única por associado.
+- Validação de CPF: (Opcional) Consulta a um serviço fake para verificar se o CPF do associado está apto a votar.
+- Apuração de Resultados: Contabilizar votos e exibir o resultado final de uma pauta.
 
-- Cadastrar uma nova pauta
-- Abrir uma sessão de votação em uma pauta (a sessão de votação deve ficar aberta por
-  um tempo determinado na chamada de abertura ou 1 minuto por default)
-- Receber votos dos associados em pautas (os votos são apenas 'Sim'/'Não'. Cada associado
-  é identificado por um id único e pode votar apenas uma vez por pauta)
-- Contabilizar os votos e dar o resultado da votação na pauta
+# 🛠️ Tecnologias Utilizadas
 
-Para fins de exercício, a segurança das interfaces pode ser abstraída e qualquer chamada para as interfaces pode ser considerada como autorizada. A solução deve ser construída em java, usando Spring-boot, mas os frameworks e bibliotecas são de livre escolha (desde que não infrinja direitos de uso).
+- **Java 17**: Linguagem principal.
+- **Spring Boot 3.5.4**: Framework para construção da aplicação.
+- **Maven**: Gerenciador de dependências e build.
+- **Spring Data MongoDB**: Persistência em banco NoSQL (MongoDB Atlas).
+- **Lombok**: Redução de código boilerplate (getters, setters, etc.).
+- **Springdoc OpenAPI (Swagger)**: Documentação interativa da API.
 
-É importante que as pautas e os votos sejam persistidos e que não sejam perdidos com o restart da aplicação.
+# 🚀 Como Executar o Projeto
 
-O foco dessa avaliação é a comunicação entre o backend e o aplicativo mobile. Essa comunicação é feita através de mensagens no formato JSON, onde essas mensagens serão interpretadas pelo cliente para montar as telas onde o usuário vai interagir com o sistema. A aplicação cliente não faz parte da avaliação, apenas os componentes do servidor. O formato padrão dessas mensagens será detalhado no anexo 1.
+## Pré-requisitos
 
-## Como proceder
+- **Java 17**: Instale o JDK 17 (Adoptium).
+- **Maven**: Instale o Maven 3.8 ou superior (Maven).
 
-Por favor, **CLONE** o repositório e implemente sua solução, ao final, notifique a conclusão e envie o link do seu repositório clonado no GitHub, para que possamos analisar o código implementado.
+A aplicação estará disponível em http://localhost:8080.
 
-Lembre de deixar todas as orientações necessárias para executar o seu código.
 
-### Tarefas bônus
+# 📚 Documentação da API (Swagger)
+A API está documentada com Swagger UI, permitindo visualizar e testar os endpoints interativamente:
 
-- Tarefa Bônus 1 - Integração com sistemas externos
-  - Criar uma Facade/Client Fake que retorna aleátoriamente se um CPF recebido é válido ou não.
-  - Caso o CPF seja inválido, a API retornará o HTTP Status 404 (Not found). Você pode usar geradores de CPF para gerar CPFs válidos
-  - Caso o CPF seja válido, a API retornará se o usuário pode (ABLE_TO_VOTE) ou não pode (UNABLE_TO_VOTE) executar a operação. Essa operação retorna resultados aleatórios, portanto um mesmo CPF pode funcionar em um teste e não funcionar no outro.
+Acesse: 
+- http://localhost:8080/swagger-ui/index.html
 
-```
-// CPF Ok para votar
-{
-    "status": "ABLE_TO_VOTE
-}
-// CPF Nao Ok para votar - retornar 404 no client tb
-{
-    "status": "UNABLE_TO_VOTE
-}
-```
+OpenAPI JSON: 
+- http://localhost:8080/v3/api-docs
 
-Exemplos de retorno do serviço
+## 🗺️ Endpoints da API
+Todos os endpoints estão sob o prefixo `/api/v1`.
 
-### Tarefa Bônus 2 - Performance
+| Método | Endpoint                               | Descrição                                                               | Exemplo de Body (Request)                                     |
+| :----- | :------------------------------------- | :---------------------------------------------------------------------- | :------------------------------------------------------------ |
+| POST   | `/api/v1/pautas`                      | Cria uma nova pauta.                                                    | `{"titulo": "Aprovação de contas", "descricao": "Detalhes..."}` |
+| GET    | `/api/v1/pautas`                      | Lista todas as pautas cadastradas.                                      | N/A                                                           |
+| POST   | `/api/v1/pautas/{id}/abrir-sessao`    | Abre uma sessão de votação para uma pauta.                              | `{"duracaoSegundos": 120}`                                    |
+| POST   | `/api/v1/pautas/{id}/votos`           | Registra o voto de um associado em uma pauta com sessão aberta.         | `{"associadoId": "id-do-associado", "cpf": "12345678900", "votoSim": true}` |
+| GET    | `/api/v1/pautas/{id}/resultado`       | Apura e exibe o resultado da votação para uma pauta.                    | N/A                                                           |
 
-- Imagine que sua aplicação possa ser usada em cenários que existam centenas de
-  milhares de votos. Ela deve se comportar de maneira performática nesses
-  cenários
-- Testes de performance são uma boa maneira de garantir e observar como sua
-  aplicação se comporta
 
-### Tarefa Bônus 3 - Versionamento da API
+# 🏛️ Arquitetura e Decisões de Design
+O projeto segue uma arquitetura em camadas:
 
-○ Como você versionaria a API da sua aplicação? Que estratégia usar?
+- **Controller**: Exibe endpoints REST, valida dados de entrada (DTOs) e retorna respostas, sem lógica de negócio.
+- **Service**: Contém a lógica de negócio, orquestrando operações e interagindo com o repositório.
+- **Repository**: Abstrai o acesso ao MongoDB com Spring Data MongoDB.
+- **Entity**: Representa documentos persistidos no MongoDB.
+- **DTO**: Objetos para transferência de dados entre camadas, protegendo as entidades de domínio.
+- **Exception**: Centraliza o tratamento de erros com @ControllerAdvice para respostas consistentes.
 
-## O que será analisado
+# Versionamento da API
+A API usa URL Path Versioning (/api/v1/...), uma abordagem simples e amplamente adotada que facilita a manutenção de versões sem impactar clientes existentes (URL Path Versioning).
 
-- Simplicidade no design da solução (evitar over engineering)
-- Organização do código
-- Arquitetura do projeto
-- Boas práticas de programação (manutenibilidade, legibilidade etc)
-- Possíveis bugs
-- Tratamento de erros e exceções
-- Explicação breve do porquê das escolhas tomadas durante o desenvolvimento da solução
-- Uso de testes automatizados e ferramentas de qualidade
-- Limpeza do código
-- Documentação do código e da API
-- Logs da aplicação
-- Mensagens e organização dos commits
-
-## Dicas
-
-- Teste bem sua solução, evite bugs
-- Deixe o domínio das URLs de callback passiveis de alteração via configuração, para facilitar
-  o teste tanto no emulador, quanto em dispositivos fisicos.
-  Observações importantes
-- Não inicie o teste sem sanar todas as dúvidas
-- Iremos executar a aplicação para testá-la, cuide com qualquer dependência externa e
-  deixe claro caso haja instruções especiais para execução do mesmo
-  Classificação da informação: Uso Interno
-
-## Anexo 1
-
-### Introdução
-
-A seguir serão detalhados os tipos de tela que o cliente mobile suporta, assim como os tipos de campos disponíveis para a interação do usuário.
-
-### Tipo de tela – FORMULARIO
-
-A tela do tipo FORMULARIO exibe uma coleção de campos (itens) e possui um ou dois botões de ação na parte inferior.
-
-O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada botão quando o mesmo é acionado. Nos casos onde temos campos de entrada
-de dados na tela, os valores informados pelo usuário são adicionados ao corpo da requisição. Abaixo o exemplo da requisição que o aplicativo vai fazer quando o botão “Ação 1” for acionado:
-
-```
-POST http://seudominio.com/ACAO1
-{
-    “campo1”: “valor1”,
-    “campo2”: 123,
-    “idCampoTexto”: “Texto”,
-    “idCampoNumerico: 999
-    “idCampoData”: “01/01/2000”
-}
-```
-
-Obs: o formato da url acima é meramente ilustrativo e não define qualquer padrão de formato.
-
-### Tipo de tela – SELECAO
-
-A tela do tipo SELECAO exibe uma lista de opções para que o usuário.
-
-O aplicativo envia uma requisição POST para a url informada e com o body definido pelo objeto dentro de cada item da lista de seleção, quando o mesmo é acionado, semelhando ao funcionamento dos botões da tela FORMULARIO.
-
-# desafio-votacao
